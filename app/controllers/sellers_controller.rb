@@ -12,23 +12,12 @@ class SellersController < ApplicationController
     render json: seller, except: :password_digest
   end
 
-  def new
-  end
-
-  def edit
-  end
-
   def create
     seller = Seller.new(seller_params)
 
     if seller.valid?
       seller.save
 
-      # payload = { id: seller.id }
-      # hmac_secret = 'secret'
-      # token = JWT.encode(payload, hmac_secret, 'HS256')
-
-      # render json: { id: seller.id, first_name: seller.first_name, token: token }
       render json: { msg: 'succefully created buyer!', seller: seller}
     else
       render json: { error: 'failed to create seller: invalid email or password', seller: seller}
@@ -37,10 +26,12 @@ class SellersController < ApplicationController
   end
 
   def update
-    seller = Seller.find_by(id: params[:id])
-    seller.update(seller_params)
-
-    render json: seller
+    if seller = Seller.find_by(id: params[:id])
+      seller.update(seller_params)
+      render json: seller
+    else
+      render json: seller.errors, status: :unprocessable_entity
+    end
   end
 
   def destroy
