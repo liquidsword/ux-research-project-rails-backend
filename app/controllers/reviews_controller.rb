@@ -53,6 +53,6 @@ private
   end
 
   def review_params
-    params.require(:review).permit(:comment, :product_id)
+    params.require(:review).permit(:description, :product_id)
   end
 end
